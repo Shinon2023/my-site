@@ -58,15 +58,15 @@ const data = {
       isActive: true,
       items: [
         {
-          title: "History",
+          title: "Vectors",
           url: "#",
         },
         {
-          title: "Starred",
+          title: "Physics",
           url: "#",
         },
         {
-          title: "Settings",
+          title: "Statistics",
           url: "#",
         },
       ],
