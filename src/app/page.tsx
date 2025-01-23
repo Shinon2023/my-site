@@ -6,7 +6,7 @@ import { AxesHelper, GridHelper, ArrowHelper, Vector3 } from "three";
 
 export default function Home() {
   return (
-    <div style={{ width: "100vw", height: "100vh" }}>
+    <div className="h-screen flex-1 rounded-xl bg-muted/50 relative">
       <Canvas camera={{ position: [5, 5, 5], fov: 75 }}>
         {/* Controls */}
         <OrbitControls />

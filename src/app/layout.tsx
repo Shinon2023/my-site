@@ -1,5 +1,8 @@
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import {
+  SidebarProvider,
+} from "@/components/ui/sidebar";
 
 export default function RootLayout({
   children,
@@ -16,7 +19,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <SidebarProvider>{children}</SidebarProvider>
         </ThemeProvider>
       </body>
     </html>

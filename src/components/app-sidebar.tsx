@@ -59,15 +59,15 @@ const data = {
       items: [
         {
           title: "Vectors",
-          url: "#",
+          url: "/playground/vectors",
         },
         {
           title: "Physics",
-          url: "#",
+          url: "/playground/physics",
         },
         {
           title: "Statistics",
-          url: "#",
+          url: "/playground/statistics",
         },
       ],
     },
