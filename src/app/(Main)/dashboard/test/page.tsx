@@ -2,10 +2,13 @@
 
 import React from "react";
 import { Canvas } from "@react-three/fiber";
-import { AxesHelper, GridHelper, ArrowHelper, Vector3 } from "three";
+import { GridHelper, ArrowHelper, Vector3 } from "three";
 import { ResetCamera } from "@/components/math/components/reset-camera";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "@/utils/redux/store";
 
 function PlaygroundPage() {
+  const { Vector3D } = useSelector((state: RootState) => state.MathVector);
   return (
     <div className="flex w-[60vw] justify-center items-center flex-1 h-full">
       <Canvas camera={{ position: [10, 10, 10], fov: 75 }}>
@@ -26,17 +29,19 @@ function PlaygroundPage() {
           object={new GridHelper(10, 10, 0xffffff)}
           rotation={[0, 0, Math.PI / 2]}
         />
-
-        <primitive
-          object={
-            new ArrowHelper(
-              new Vector3(1, 2, 1).normalize(),
-              new Vector3(0, 0, 0),
-              new Vector3(1, 2, 1).length(),
-              0xffff00
-            )
-          }
-        />
+        {Vector3D.map((vector, index) => (
+          <primitive
+            key={index}
+            object={
+              new ArrowHelper(
+                new Vector3(vector.x, vector.y, vector.z).normalize(),
+                new Vector3(0, 0, 0),
+                new Vector3(vector.x, vector.y, vector.z).length(),
+                0xffff00
+              )
+            }
+          />
+        ))}
       </Canvas>
     </div>
   );

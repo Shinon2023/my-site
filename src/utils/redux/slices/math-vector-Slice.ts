@@ -1,7 +1,6 @@
 "use client";
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Vector3 } from "three";
 
 interface Vector3D {
   x: number;
@@ -21,7 +20,7 @@ const mathVectorSlice = createSlice({
   name: "mathVector",
   initialState,
   reducers: {
-    addVector: (state, action: PayloadAction<Vector3>) => {
+    addVector: (state, action: PayloadAction<Vector3D>) => {
       const vector = action.payload;
       state.Vector3D.push({
         x: vector.x,

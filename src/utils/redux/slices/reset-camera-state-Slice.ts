@@ -1,7 +1,7 @@
 "use client";
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import {CameraView} from "@/types/Canvas";
+import { CameraView } from "@/utils/types/Canvas";
 
 interface CameraResetState {
   CameraView: CameraView;

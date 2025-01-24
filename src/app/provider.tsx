@@ -4,7 +4,7 @@ import React from "react";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Provider } from "react-redux";
-import { store } from "@/redux/store";
+import { store } from "@/utils/redux/store";
 
 function RootProvider({
   children,

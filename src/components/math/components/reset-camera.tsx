@@ -5,13 +5,13 @@ import * as THREE from "three";
 import { useThree } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "@/redux/store";
+import { RootState } from "@/utils/redux/store";
 import {
   toggleCamera,
   resetToDefault,
   setError,
   clearError,
-} from "@/redux/slices/reset-camera-state-Slice";
+} from "@/utils/redux/slices/reset-camera-state-Slice";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -23,7 +23,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { CameraView } from "@/types/Canvas";
+import { CameraView } from "@/utils/types/Canvas";
 
 export function ResetCamera() {
   const { camera } = useThree();
