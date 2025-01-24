@@ -21,7 +21,7 @@ function PlaygroundPage() {
   const { Vector3D } = useSelector((state: RootState) => state.MathVector);
   return (
     <div className="flex w-[60vw] justify-center items-center flex-1 h-full">
-      <Canvas orthographic camera={{ position: [10, 10, 10], zoom: 50 }}>
+      <Canvas orthographic camera={{ position: [10, 10, 10], zoom: 25 }}>
         <ResetCamera />
         <ambientLight intensity={0.5} />
         <directionalLight position={[10, 10, 10]} intensity={1} />
@@ -117,17 +117,17 @@ function PlaygroundPage() {
             />
             <mesh position={[vector.x, vector.z, vector.y]}>
               <sphereGeometry args={[0.1, 32, 32]} />
-              <meshBasicMaterial color={0xff0000} />
+              <meshBasicMaterial color={0xffff00} />
             </mesh>
-            <Billboard position={[vector.x + 0.1, vector.z + 0.1, vector.y + 0.1]}>
+            <Billboard position={[vector.x + 0.25, vector.z + 0.25, vector.y + 0.25]}>
               <Text
                 color="white"
                 fontSize={0.3}
                 anchorX="center"
                 anchorY="middle"
               >
-                ({vector.x.toFixed(1)}, {vector.z.toFixed(1)},{" "}
-                {vector.y.toFixed(1)})
+                ({vector.x.toFixed(1)}, {vector.y.toFixed(1)},{" "}
+                {vector.z.toFixed(1)})
               </Text>
             </Billboard>
           </React.Fragment>

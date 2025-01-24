@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import * as THREE from "three";
-import { useThree } from "@react-three/fiber";
+import { useThree, useFrame } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/utils/redux/store";
@@ -23,7 +23,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { CameraView } from "@/utils/types/Canvas";
+import { CameraView } from "@/utils/types/three-js";
 
 export function ResetCamera() {
   const { camera } = useThree();
@@ -32,6 +32,11 @@ export function ResetCamera() {
     (state: RootState) => state.CameraReset
   );
   const controlsRef = useRef<any>(null);
+
+  // useFrame(({ camera }) => {
+  //   const cameraPosition = camera.position;
+  //   console.log(cameraPosition);
+  // });
 
   const resetCamera = (View: CameraView) => {
     const getTargetPosition = (View: CameraView) => {

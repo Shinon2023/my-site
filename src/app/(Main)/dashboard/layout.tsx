@@ -129,10 +129,7 @@ export default function MainLayout({
             <ResetCameraButton />
           </div>
         </header>
-
-        <main className="flex flex-1 gap-2 h-screen w-full items-center">
-          {children}
-        </main>
+        <main className="flex flex-1 gap-2 w-full items-start">{children}</main>
       </div>
     </div>
   );

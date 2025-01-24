@@ -2,7 +2,7 @@
 
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-interface Vector3D {
+type Vector3D = {
   x: number;
   y: number;
   z: number;
