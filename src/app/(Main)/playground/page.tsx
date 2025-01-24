@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import { AxesHelper, GridHelper, ArrowHelper, Vector3 } from "three";
-import { ResetCameraButton } from "@/components/math/components/reset-camera";
+import { ResetCamera } from "@/components/math/components/reset-camera";
 import { Button } from "@/components/ui/button";
 
 function PlaygroundPage() {
@@ -13,7 +13,7 @@ function PlaygroundPage() {
   return (
     <div className="flex w-full">
       <Canvas camera={{ position: [10, 10, 10], fov: 75 }}>
-        <ResetCameraButton reset={reset} />
+        <ResetCamera />
         <ambientLight intensity={0.5} />
         <directionalLight position={[10, 10, 10]} intensity={1} />
 

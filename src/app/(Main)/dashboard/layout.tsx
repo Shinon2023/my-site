@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { AppSidebar } from "@/components/app-sidebar";
 import {
   Breadcrumb,
@@ -12,14 +12,13 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { usePathname } from "next/navigation";
+import { ResetCameraButton } from "@/components/math/components/reset-camera";
 
 export default function MainLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const pathname = usePathname().split("/").pop();
   return (
     <div className="flex flex-row w-full h-screen">
       <AppSidebar className="absolute" />
@@ -41,6 +40,9 @@ export default function MainLayout({
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
+          </div>
+          <div className="flex flex-1 justify-end gap-2 px-4">
+            <ResetCameraButton />
           </div>
         </header>
 
