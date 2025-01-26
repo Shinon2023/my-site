@@ -29,3 +29,11 @@ export async function getProjects(): Promise<Project[]> {
   }
   return data;
 }
+
+export async function deleteProject(id: number) {
+  const supabase = createClient();
+  const { error } = await supabase.from("project").delete().eq("id", id);
+  if (error) {
+    throw error;
+  }
+}
