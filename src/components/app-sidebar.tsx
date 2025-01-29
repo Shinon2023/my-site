@@ -1,21 +1,9 @@
 "use client";
 
 import * as React from "react";
-import {
-  AudioWaveform,
-  BookOpen,
-  Bot,
-  Command,
-  Frame,
-  GalleryVerticalEnd,
-  Map,
-  PieChart,
-  Settings2,
-  SquareTerminal,
-} from "lucide-react";
+import { SquareTerminal } from "lucide-react";
 
 import { NavMain } from "@/components/nav-main";
-import { NavProjects } from "@/components/nav-projects";
 import { NavUser } from "@/components/nav-user";
 import { ProjectSwitcher } from "@/components/projects-switcher";
 import {
@@ -30,22 +18,22 @@ import { RootState } from "@/utils/redux/store";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const assets = useSelector((state: RootState) => state.Asset.assets);
-  const project = useSelector((state: RootState) => state.Project.projects);
+  const project = useSelector((state: RootState) => state.Project);
   const user = useSelector((state: RootState) => state.User.user);
 
   const navMain = [
     {
-      title: "Playground",
+      title: "Vector",
       url: "#",
       icon: SquareTerminal,
       isActive: true,
-      items: assets,
+      items: assets.filter((asset) => asset.project_id === project.project_selected?.id),
     },
   ];
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <ProjectSwitcher project={project} />
+        <ProjectSwitcher project={project.projects} />
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={navMain} />

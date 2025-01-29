@@ -1,7 +1,6 @@
 "use client";
 
-import { ChevronRight, type LucideIcon } from "lucide-react";
-
+import { ChevronRight, CircleX, type LucideIcon } from "lucide-react";
 import {
   Collapsible,
   CollapsibleContent,
@@ -18,6 +17,21 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import { asset } from "@/utils/types/project";
+import AddVector from "@/components/math/components/add-vector";
+import { useDispatch } from "react-redux";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { removeAsset } from "@/utils/redux/slices/assets-Slice";
 
 export function NavMain({
   items,
@@ -30,6 +44,10 @@ export function NavMain({
     items?: asset[];
   }[];
 }) {
+  const dispatch = useDispatch();
+  const handleRemoveAsset = (id: string) => {
+    dispatch(removeAsset(id));
+  };
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Platform</SidebarGroupLabel>
@@ -51,13 +69,51 @@ export function NavMain({
               </CollapsibleTrigger>
               <CollapsibleContent>
                 <SidebarMenuSub>
-                  {item.items?.map((subItem) => (
-                    <SidebarMenuSubItem key={subItem.name}>
+                  {item.items?.map((subItem: asset) => (
+                    <SidebarMenuSubItem key={subItem.id}>
                       <SidebarMenuSubButton asChild>
-                        <span>{subItem.name}</span>
+                        <div className="flex justify-between">
+                          <span>{subItem.name}</span>
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button
+                                variant={"ghost"}
+                                className="w-2 h-full rounded-full"
+                              >
+                                <CircleX className="text-red-700"/>
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>
+                                  Are you absolutely sure?
+                                </AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  This action cannot be undone. This will
+                                  permanently delete your asset and remove your
+                                  asset from project.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() => handleRemoveAsset(subItem.id)}
+                                >
+                                  Continue
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </div>
                       </SidebarMenuSubButton>
+                      <CollapsibleContent></CollapsibleContent>
                     </SidebarMenuSubItem>
                   ))}
+                  <SidebarMenuSubItem>
+                    <SidebarMenuSubButton asChild>
+                      <AddVector />
+                    </SidebarMenuSubButton>
+                  </SidebarMenuSubItem>
                 </SidebarMenuSub>
               </CollapsibleContent>
             </SidebarMenuItem>

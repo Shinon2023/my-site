@@ -11,7 +11,6 @@ function RootProvider({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   return (
     <ThemeProvider
       attribute="class"
@@ -19,9 +18,7 @@ function RootProvider({
       enableSystem
       disableTransitionOnChange
     >
-      <Provider store={store}>
-        <SidebarProvider>{children}</SidebarProvider>
-      </Provider>
+      <Provider store={store}>{children}</Provider>
     </ThemeProvider>
   );
 }
