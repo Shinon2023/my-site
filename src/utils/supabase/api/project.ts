@@ -1,13 +1,12 @@
 "use client";
 
-import { createClient } from "../client";
+import { supabase } from "../client";
 import { Project } from "@/utils/types/project";
 
 export async function crateProject(formData: FormData) {
   const name = formData.get("name") as string;
   const description = formData.get("description") as string;
   const dimension = formData.get("dimension") as string;
-  const supabase = createClient();
   const { error } = await supabase.from("project").insert({
     name: name,
     description: description,
@@ -17,21 +16,34 @@ export async function crateProject(formData: FormData) {
   if (error) {
     throw error;
   }
-
-  //  console.log(name, description, dimension);
 }
 
-export async function getProjects(): Promise<Project[]> {
-  const supabase = createClient();
-  const { data, error } = await supabase.from("project").select("*");
+export async function getProject(project_id: string): Promise<Project> {
+  const { data, error } = await supabase
+    .from("project")
+    .select("*")
+    .eq("id", project_id)
+    .single();
   if (error) {
     throw error;
   }
   return data;
 }
 
-export async function deleteProject(id: number) {
-  const supabase = createClient();
+export async function getProjects(user_id: string): Promise<Project[]> {
+  console.log(user_id);
+  const { data, error } = await supabase
+    .from("project")
+    .select("*")
+    .eq("user_id", user_id);
+  if (error) {
+    console.error("Failed to fetch projects:", error);
+    throw new Error("Failed to fetch projects");
+  }
+  return data;
+}
+
+export async function deleteProject(id: string) {
   const { error } = await supabase.from("project").delete().eq("id", id);
   if (error) {
     throw error;

@@ -96,7 +96,7 @@ export function ResetCameraButton() {
     dispatch(toggleCamera(position));
   }, [position]);
 
-  console.log(position);
+  // console.log(position);
 
   return (
     <DropdownMenu>

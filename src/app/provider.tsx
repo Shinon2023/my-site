@@ -11,6 +11,7 @@ function RootProvider({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
     <ThemeProvider
       attribute="class"

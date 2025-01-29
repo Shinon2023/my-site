@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { addVector } from "@/utils/redux/slices/math-vector-Slice";
+import { addVector } from "@/utils/redux/slices/assets-Slice";
 
 export default function MainLayout({
   children,

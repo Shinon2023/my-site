@@ -1,4 +1,10 @@
-export type Dimension = "3D" | "2D";
+type Dimension = "3D" | "2D";
+
+type Vector = {
+  x: number;
+  y: number;
+  z: number;
+};
 
 type Variable = {
   name: string;
@@ -10,25 +16,29 @@ type Term = {
   variables: Variable[];
 };
 
-type DynamicEquation = {
-  id: string;
-  type: "Vector" | "General";
-  terms: Term[];
-};
+type DynamicEquation =
+  | {
+      type: "Vector";
+      vector: Vector;
+    }
+  | {
+      type: "General";
+      terms: Term[];
+    };
 
-export type asset = {
+export interface asset {
   id: string;
   name: string;
   data: DynamicEquation;
-  created_at: Date;
-};
+  project_id: string;
+}
 
 type ai_chat = {
   id: string;
   role: "user" | "assistant" | "system";
   content: string;
   created_at: Date;
-}
+};
 
 export interface CreateProjectFormValues {
   name: string;
@@ -36,14 +46,13 @@ export interface CreateProjectFormValues {
   dimension: Dimension;
 }
 
-export type Project = {
+export interface Project {
   id: string;
   name: string;
   description: string | null;
   dimension: Dimension;
   user_id: string | null;
-  asset: asset[] | [];
   ai_chat: ai_chat[] | [];
   setting: any[] | [];
   created_at: Date;
-};
+}
