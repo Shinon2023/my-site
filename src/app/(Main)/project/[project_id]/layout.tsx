@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { AppSidebar } from "@/components/app-sidebar";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "@/utils/redux/store";
+import { useDispatch } from "react-redux";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -15,38 +14,20 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { ResetCameraButton } from "@/components/math/components/reset-camera";
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { addVector } from "@/utils/redux/slices/assets-Slice";
+import { selectProject } from "@/utils/redux/slices/project-Slice";
 
-export default function MainLayout({
+export default function TestLayout({
   children,
+  params,
 }: Readonly<{
   children: React.ReactNode;
+  params: { project_id: string };
 }>) {
-  const [x, setX] = useState<number>(0);
-  const [y, setY] = useState<number>(0);
-  const [z, setZ] = useState<number>(0);
   const dispatch = useDispatch();
-
-  const handleAddVector = () => {
-    const newVector = { x, y, z };
-    dispatch(addVector(newVector));
-  };
-
-  const { Vector3D } = useSelector((state: RootState) => state.MathVector);
-  console.log(Vector3D);
-
+  useEffect(() => {
+    dispatch(selectProject(params.project_id));
+  });
+  // console.log(params);
   return (
     <div className="flex flex-row w-full h-screen">
       <AppSidebar className="absolute" />
@@ -68,6 +49,9 @@ export default function MainLayout({
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
+          </div>
+          <div className="flex flex-1 justify-end gap-2 px-4">
+            <ResetCameraButton />
           </div>
         </header>
         <main className="flex flex-1 gap-2 w-full items-start">{children}</main>
