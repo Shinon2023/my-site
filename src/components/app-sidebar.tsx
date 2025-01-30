@@ -27,7 +27,22 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       url: "#",
       icon: SquareTerminal,
       isActive: true,
-      items: assets.filter((asset) => asset.project_id === project.project_selected?.id),
+      items: assets.filter(
+        (asset) =>
+          asset.project_id === project.project_selected?.id &&
+          asset.data.type === "Vector"
+      ),
+    },
+    {
+      title: "Functions",
+      url: "#",
+      icon: SquareTerminal,
+      isActive: true,
+      items: assets.filter(
+        (asset) =>
+          asset.project_id === project.project_selected?.id &&
+          asset.data.type === "General"
+      ),
     },
   ];
   return (

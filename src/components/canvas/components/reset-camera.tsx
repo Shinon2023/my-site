@@ -33,45 +33,43 @@ export function ResetCamera() {
   );
   const controlsRef = useRef<any>(null);
 
-  // useFrame(({ camera }) => {
-  //   const cameraPosition = camera.position;
-  //   console.log(cameraPosition);
-  // });
-
-  const resetCamera = (View: CameraView) => {
-    const getTargetPosition = (View: CameraView) => {
-      switch (View) {
-        case "Perspective":
-          return new THREE.Vector3(10, 10, 10);
-        case "Top":
-          return new THREE.Vector3(0, 10, 0);
-        case "Front":
-          return new THREE.Vector3(0, 0, 10);
-        case "Side":
-          return new THREE.Vector3(10, 0, 0);
-      }
-    };
-    const targetPosition = getTargetPosition(View);
-    const startPosition = camera.position.clone();
-    const duration = 1.5;
-    let elapsed = 0;
-
-    const animate = () => {
-      elapsed += 0.016;
-      const t = Math.min(elapsed / duration, 1);
-      camera.position.lerpVectors(startPosition, targetPosition, t);
-
-      camera.lookAt(0, 0, 0);
-
-      if (t < 1) {
-        requestAnimationFrame(animate);
-      } else if (controlsRef.current) {
-        controlsRef.current.update();
-      }
-    };
-
-    animate();
+const resetCamera = (View: CameraView) => {
+  const getTargetPosition = (View: CameraView) => {
+    switch (View) {
+      case "Perspective":
+        return new THREE.Vector3(10, 10, 10);
+      case "Top":
+        return new THREE.Vector3(0, 10, 0);
+      case "Front":
+        return new THREE.Vector3(0, 0, 10);
+      case "Side":
+        return new THREE.Vector3(10, 0, 0);
+    }
   };
+
+  const targetPosition = getTargetPosition(View);
+  const startPosition = camera.position.clone();
+  const duration = 1.5;
+  let elapsed = 0;
+
+  const animate = () => {
+    elapsed += 0.016;
+    const t = Math.min(elapsed / duration, 1);
+    camera.position.lerpVectors(startPosition, targetPosition, t);
+
+    camera.lookAt(0, 0, 0);
+
+    if (t < 1) {
+      requestAnimationFrame(animate);
+    } else if (controlsRef.current) {
+      controlsRef.current.target.set(0, 0, 0);
+      controlsRef.current.update();
+    }
+  };
+
+  animate();
+};
+
 
   useEffect(() => {
     if (isReset) {
@@ -95,8 +93,6 @@ export function ResetCameraButton() {
   useEffect(() => {
     dispatch(toggleCamera(position));
   }, [position]);
-
-  // console.log(position);
 
   return (
     <DropdownMenu>

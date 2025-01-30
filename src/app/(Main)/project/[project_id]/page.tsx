@@ -9,10 +9,11 @@ import {
   Vector3,
   GridHelper,
 } from "three";
-import { ResetCamera } from "@/components/math/components/reset-camera";
+import { ResetCamera } from "@/components/canvas/components/reset-camera";
 import { useSelector } from "react-redux";
 import { Text, Billboard } from "@react-three/drei";
 import { RootState } from "@/utils/redux/store";
+import { Parabola2D, GeneralEquation3D } from "@/components/canvas/parabola";
 
 function PlaygroundPage() {
   const { assets } = useSelector((state: RootState) => state.MathVector);
@@ -99,9 +100,11 @@ function PlaygroundPage() {
           </Text>
         </Billboard>
 
+        {/* <Parabola2D /> */}
+
         {assets.map(
-          (vector, index) =>
-            vector.data.type === "Vector" && (
+          (asset, index) => (
+            asset.data.type === "Vector" && (
               <React.Fragment key={index}>
                 <primitive
                   object={
@@ -109,10 +112,10 @@ function PlaygroundPage() {
                       new BufferGeometry().setFromPoints([
                         new Vector3(0, 0, 0),
                         new Vector3(
-                          vector.data.vector.x,
+                          asset.data.vector.x,
 
-                          vector.data.vector.z,
-                          vector.data.vector.y
+                          asset.data.vector.z,
+                          asset.data.vector.y
                         ),
                       ]),
                       new LineBasicMaterial({ color: 0xffff00 })
@@ -121,9 +124,9 @@ function PlaygroundPage() {
                 />
                 <mesh
                   position={[
-                    vector.data.vector.x,
-                    vector.data.vector.z,
-                    vector.data.vector.y,
+                    asset.data.vector.x,
+                    asset.data.vector.z,
+                    asset.data.vector.y,
                   ]}
                 >
                   <sphereGeometry args={[0.1, 32, 32]} />
@@ -131,9 +134,9 @@ function PlaygroundPage() {
                 </mesh>
                 <Billboard
                   position={[
-                    vector.data.vector.x + 0.25,
-                    vector.data.vector.z + 0.25,
-                    vector.data.vector.y + 0.25,
+                    asset.data.vector.x + 0.25,
+                    asset.data.vector.z + 0.25,
+                    asset.data.vector.y + 0.25,
                   ]}
                 >
                   <Text
@@ -142,13 +145,17 @@ function PlaygroundPage() {
                     anchorX="center"
                     anchorY="middle"
                   >
-                    ({vector.data.vector.x.toFixed(1)},{" "}
-                    {vector.data.vector.y.toFixed(1)},{" "}
-                    {vector.data.vector.z.toFixed(1)})
+                    ({asset.data.vector.x.toFixed(1)},{" "}
+                    {asset.data.vector.y.toFixed(1)},{" "}
+                    {asset.data.vector.z.toFixed(1)})
                   </Text>
                 </Billboard>
               </React.Fragment>
+            ),
+            asset.data.type === "General" && (
+              <GeneralEquation3D key={index} equation={asset.data} />
             )
+          )
         )}
       </Canvas>
     </div>

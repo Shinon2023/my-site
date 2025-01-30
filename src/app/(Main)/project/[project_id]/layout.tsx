@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { ResetCameraButton } from "@/components/math/components/reset-camera";
+import { ResetCameraButton } from "@/components/canvas/components/reset-camera";
 import { selectProject } from "@/utils/redux/slices/project-Slice";
 
 export default function TestLayout({

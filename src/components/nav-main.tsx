@@ -17,7 +17,10 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import { asset } from "@/utils/types/project";
-import AddVector from "@/components/math/components/add-vector";
+import {
+  AddVector,
+  AddFunction,
+} from "@/components/canvas/components/add-assets";
 import { useDispatch } from "react-redux";
 import {
   AlertDialog,
@@ -80,7 +83,7 @@ export function NavMain({
                                 variant={"ghost"}
                                 className="w-2 h-full rounded-full"
                               >
-                                <CircleX className="text-red-700"/>
+                                <CircleX className="text-red-700" />
                               </Button>
                             </AlertDialogTrigger>
                             <AlertDialogContent>
@@ -109,11 +112,20 @@ export function NavMain({
                       <CollapsibleContent></CollapsibleContent>
                     </SidebarMenuSubItem>
                   ))}
-                  <SidebarMenuSubItem>
-                    <SidebarMenuSubButton asChild>
-                      <AddVector />
-                    </SidebarMenuSubButton>
-                  </SidebarMenuSubItem>
+                  {item.title === "Vector" && (
+                    <SidebarMenuSubItem>
+                      <SidebarMenuSubButton asChild>
+                        <AddVector />
+                      </SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                  )}
+                  {item.title === "Functions" && (
+                    <SidebarMenuSubItem>
+                      <SidebarMenuSubButton asChild>
+                        <AddFunction />
+                      </SidebarMenuSubButton>
+                    </SidebarMenuSubItem>
+                  )}
                 </SidebarMenuSub>
               </CollapsibleContent>
             </SidebarMenuItem>

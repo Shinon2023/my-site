@@ -20,8 +20,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { addNewAsset } from "@/utils/redux/slices/assets-Slice";
 import { v4 as uuidv4 } from "uuid";
+import { parseEquation } from "@/utils/func/parse-equation";
 
-function AddVector() {
+export function AddVector() {
   const dispatch = useDispatch();
   const [name, setName] = useState<string>("");
   const [x, setX] = useState<number>(0);
@@ -125,4 +126,81 @@ function AddVector() {
   );
 }
 
-export default AddVector;
+export function AddFunction() {
+  const dispatch = useDispatch();
+  const [name, setName] = useState<string>("");
+  const [equation, setEquation] = useState<string>("");
+  const project_id = useSelector(
+    (state: RootState) => state.Project.project_selected?.id
+  );
+
+  const terms = parseEquation(equation);
+
+  const handleAddFunc = () => {
+    if (project_id) {
+      dispatch(
+        addNewAsset({
+          id: uuidv4(),
+          name: name,
+          data: {
+            type: "General",
+            terms: terms,
+          },
+          project_id: project_id,
+        })
+      );
+    } else {
+      console.log("No project selected");
+    }
+  };
+
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <button className="w-full hover:bg-foreground/10 rounded-lg flex justify-center">
+          <Plus />
+        </button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Add New Vector</DialogTitle>
+          <DialogDescription>
+            Add a new vector to 3D dimensions
+          </DialogDescription>
+        </DialogHeader>
+        <div className="flex items-center gap-4">
+          <Label htmlFor="name" className="text-right">
+            Name
+          </Label>
+          <Input
+            id="name"
+            type="string"
+            className="col-span-3"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </div>
+        <div className="flex items-center gap-4">
+          <Label htmlFor="equation" className="text-right">
+            Equation
+          </Label>
+          <Input
+            id="equation"
+            type="string"
+            className="col-span-3"
+            value={equation}
+            onChange={(e) => setEquation(e.target.value)}
+          />
+        </div>
+
+        <DialogFooter>
+          <DialogClose asChild>
+            <Button type="button" onClick={handleAddFunc}>
+              Add Function
+            </Button>
+          </DialogClose>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}

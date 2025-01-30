@@ -1,6 +1,6 @@
 "use client";
 
-import { supabase } from "../client";
+import { supabase } from "@/utils/supabase/client";
 import { Project } from "@/utils/types/project";
 
 export async function crateProject(formData: FormData) {

@@ -1,6 +1,6 @@
 "use client";
 
-import { supabase } from "../client";
+import { supabase } from "@/utils/supabase/client";
 
 export async function getAssets(user_id: string) {
   const { data, error } = await supabase

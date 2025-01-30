@@ -1,35 +1,33 @@
 type Dimension = "3D" | "2D";
 
-type Vector = {
-  x: number;
-  y: number;
-  z: number;
-};
-
-type Variable = {
+export type Variable = {
   name: string;
   exponent: number;
 };
 
-type Term = {
+export type Term = {
   coefficient: number;
   variables: Variable[];
 };
 
-type DynamicEquation =
-  | {
-      type: "Vector";
-      vector: Vector;
-    }
-  | {
-      type: "General";
-      terms: Term[];
-    };
+export type Vector = {
+  type: "Vector";
+  vector: {
+    x: number;
+    y: number;
+    z: number;
+  };
+};
+
+export type GeneralEquation = {
+  type: "General";
+  terms: Term[];
+};
 
 export interface asset {
   id: string;
   name: string;
-  data: DynamicEquation;
+  data: Vector | GeneralEquation;
   project_id: string;
 }
 
