@@ -1,8 +1,8 @@
-import { useThree } from "@react-three/fiber";
+import { useThree, RootState } from "@react-three/fiber";
 import { useEffect } from "react";
 
 export function CanvasEffects() {
-  const renderer = useThree((state) => state.gl);
+  const renderer = useThree((state: RootState) => state.gl);
 
   useEffect(() => {
     renderer.localClippingEnabled = true;
