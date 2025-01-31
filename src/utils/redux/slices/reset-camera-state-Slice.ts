@@ -20,16 +20,11 @@ const resetSlice = createSlice({
   initialState,
   reducers: {
     toggleCamera: (state, action: PayloadAction<CameraView>) => {
-      state.isReset = !state.isReset;
+      state.isReset = false;
       state.CameraView = action.payload;
     },
-    toggleReset: (state) => {
-      // state.isReset = !state.isReset;
-      state.isReset = !state.isReset;
-    },
-    resetToDefault: (state) => {
-      state.CameraView = "Perspective";
-      state.isReset = false;
+    toggleReset: (state, action: PayloadAction<boolean>) => {
+      state.isReset = action.payload;
     },
     setError: (state, action: PayloadAction<string>) => {
       state.errorMessage = action.payload;
@@ -40,11 +35,6 @@ const resetSlice = createSlice({
   },
 });
 
-export const {
-  toggleReset,
-  toggleCamera,
-  resetToDefault,
-  setError,
-  clearError,
-} = resetSlice.actions;
+export const { toggleReset, toggleCamera, setError, clearError } =
+  resetSlice.actions;
 export default resetSlice.reducer;

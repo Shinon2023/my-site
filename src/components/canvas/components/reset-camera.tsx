@@ -8,18 +8,19 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/utils/redux/store";
 import {
   toggleCamera,
-  resetToDefault,
   setError,
   clearError,
+  toggleReset,
 } from "@/utils/redux/slices/reset-camera-state-Slice";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
   DropdownMenuSeparator,
+  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
@@ -33,54 +34,55 @@ export function ResetCamera() {
   );
   const controlsRef = useRef<any>(null);
 
-const resetCamera = (View: CameraView) => {
-  const getTargetPosition = (View: CameraView) => {
-    switch (View) {
-      case "Perspective":
-        return new THREE.Vector3(10, 10, 10);
-      case "Top":
-        return new THREE.Vector3(0, 10, 0);
-      case "Front":
-        return new THREE.Vector3(0, 0, 10);
-      case "Side":
-        return new THREE.Vector3(10, 0, 0);
-    }
+  const resetCamera = (View: CameraView) => {
+    const getTargetPosition = (View: CameraView) => {
+      switch (View) {
+        case "Perspective":
+          return new THREE.Vector3(10, 10, 10);
+        case "[+X][-Y]":
+          return new THREE.Vector3(0, 10, 0);
+        case "[+X][+Z]":
+          return new THREE.Vector3(0, 0, 10);
+        case "[-Y][+Z]":
+          return new THREE.Vector3(10, 0, 0);
+        case "[+X][+Y]":
+          return new THREE.Vector3(0, -10, 0);
+      }
+    };
+
+    const targetPosition = getTargetPosition(View);
+    const startPosition = camera.position.clone();
+    const duration = 1.5;
+    let elapsed = 0;
+
+    const animate = () => {
+      elapsed += 0.016;
+      const t = Math.min(elapsed / duration, 1);
+      camera.position.lerpVectors(startPosition, targetPosition, t);
+
+      camera.lookAt(0, 0, 0);
+
+      if (t < 1) {
+        requestAnimationFrame(animate);
+      } else if (controlsRef.current) {
+        controlsRef.current.target.set(0, 0, 0);
+        controlsRef.current.update();
+      }
+    };
+
+    animate();
   };
-
-  const targetPosition = getTargetPosition(View);
-  const startPosition = camera.position.clone();
-  const duration = 1.5;
-  let elapsed = 0;
-
-  const animate = () => {
-    elapsed += 0.016;
-    const t = Math.min(elapsed / duration, 1);
-    camera.position.lerpVectors(startPosition, targetPosition, t);
-
-    camera.lookAt(0, 0, 0);
-
-    if (t < 1) {
-      requestAnimationFrame(animate);
-    } else if (controlsRef.current) {
-      controlsRef.current.target.set(0, 0, 0);
-      controlsRef.current.update();
-    }
-  };
-
-  animate();
-};
-
 
   useEffect(() => {
-    if (isReset) {
+    if (!isReset) {
       try {
         resetCamera(CameraView);
         dispatch(clearError());
+        dispatch(toggleReset(true));
       } catch (e) {
         dispatch(setError((e as Error).message));
       }
     }
-    dispatch(resetToDefault());
   }, [isReset]);
 
   return <OrbitControls ref={controlsRef} />;
@@ -88,11 +90,10 @@ const resetCamera = (View: CameraView) => {
 
 export function ResetCameraButton() {
   const dispatch = useDispatch();
-  const [position, setPosition] = useState<CameraView>("Perspective");
 
-  useEffect(() => {
-    dispatch(toggleCamera(position));
-  }, [position]);
+  const handleClick = (View: CameraView) => {
+    dispatch(toggleCamera(View));
+  };
 
   return (
     <DropdownMenu>
@@ -102,17 +103,28 @@ export function ResetCameraButton() {
       <DropdownMenuContent className="w-56">
         <DropdownMenuLabel>Panel Position</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuRadioGroup
-          value={position}
-          onValueChange={setPosition as any}
-        >
-          <DropdownMenuRadioItem value="Perspective">
+        <DropdownMenuGroup>
+          <DropdownMenuItem onClick={() => handleClick("Perspective")}>
             Perspective
-          </DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="Top">Top</DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="Front">Front</DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="Side">Side</DropdownMenuRadioItem>
-        </DropdownMenuRadioGroup>
+            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleClick("[+X][-Y]")}>
+            [+X][-Y]
+            <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleClick("[+X][+Z]")}>
+            [+X][+Z]
+            <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleClick("[-Y][+Z]")}>
+            [-Y][+Z]
+            <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => handleClick("[+X][+Y]")}>
+            [+X][+Y]
+            <DropdownMenuShortcut>⌘K</DropdownMenuShortcut>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
   );

@@ -2,161 +2,56 @@
 
 import React from "react";
 import { Canvas } from "@react-three/fiber";
-import {
-  Line,
-  BufferGeometry,
-  LineBasicMaterial,
-  Vector3,
-  GridHelper,
-} from "three";
 import { ResetCamera } from "@/components/canvas/components/reset-camera";
 import { useSelector } from "react-redux";
-import { Text, Billboard } from "@react-three/drei";
 import { RootState } from "@/utils/redux/store";
-import { Parabola2D, GeneralEquation3D } from "@/components/canvas/parabola";
+import Vectors from "@/components/canvas/vectors";
+import Grid from "@/components/canvas/grid";
+import {
+  GeneralEquation3D,
+  GeneralEquation2D,
+} from "@/components/canvas/parabola";
+import { CanvasEffects } from "@/components/canvas/clipping-plane";
 
 function PlaygroundPage() {
-  const { assets } = useSelector((state: RootState) => state.MathVector);
+  const assets = useSelector((state: RootState) => state.Asset.assets);
+
   return (
     <div className="flex w-[60vw] justify-center items-center flex-1 h-full">
       <Canvas orthographic camera={{ position: [10, 10, 10], zoom: 25 }}>
         <ResetCamera />
-        <ambientLight intensity={0.5} />
-        <directionalLight position={[10, 10, 10]} intensity={1} />
+        <CanvasEffects />
+        <Grid />
+        {assets.map((asset, index) => {
+          const equation = asset.data;
 
-        <primitive object={new GridHelper(20, 20, 0xffffff)} />
-        <primitive
-          object={new GridHelper(20, 20, 0xffffff)}
-          rotation={[Math.PI / 2, 0, 0]}
-        />
-        <primitive
-          object={new GridHelper(20, 20, 0xffffff)}
-          rotation={[0, 0, Math.PI / 2]}
-        />
+          switch (asset.data.type) {
+            case "Vector":
+              return <Vectors key={index} vectors={asset.data} />;
 
-        <primitive
-          object={
-            new Line(
-              new BufferGeometry().setFromPoints([
-                new Vector3(-11, 0, 0),
-                new Vector3(11, 0, 0),
-              ]),
-              new LineBasicMaterial({ color: 0xff0000 })
-            )
+            case "General":
+              if ("terms" in equation) {
+                const variableCount = equation.terms.reduce((count, term) => {
+                  const termVariableNames = term.variables.map((v) => v.name);
+                  termVariableNames.forEach((name) => {
+                    if (!count.includes(name)) count.push(name);
+                  });
+                  return count;
+                }, [] as string[]).length;
+
+                if (variableCount === 1) {
+                  return <GeneralEquation2D key={index} equation={equation} />;
+                } else if (variableCount > 1) {
+                  return <GeneralEquation3D key={index} equation={equation} />;
+                } else {
+                  return null;
+                }
+              }
+
+            default:
+              return null;
           }
-        />
-        <Billboard position={[12, 0, 0]}>
-          <Text color="white" fontSize={0.5} anchorX="center" anchorY="middle">
-            +X
-          </Text>
-        </Billboard>
-        <Billboard position={[-12, 0, 0]}>
-          <Text color="white" fontSize={0.5} anchorX="center" anchorY="middle">
-            -X
-          </Text>
-        </Billboard>
-
-        <primitive
-          object={
-            new Line(
-              new BufferGeometry().setFromPoints([
-                new Vector3(0, -11, 0),
-                new Vector3(0, 11, 0),
-              ]),
-              new LineBasicMaterial({ color: 0x00ff00 })
-            )
-          }
-        />
-        <Billboard position={[0, 12, 0]}>
-          <Text color="white" fontSize={0.5} anchorX="center" anchorY="middle">
-            +Z
-          </Text>
-        </Billboard>
-        <Billboard position={[0, -12, 0]}>
-          <Text color="white" fontSize={0.5} anchorX="center" anchorY="middle">
-            -Z
-          </Text>
-        </Billboard>
-
-        <primitive
-          object={
-            new Line(
-              new BufferGeometry().setFromPoints([
-                new Vector3(0, 0, -11),
-                new Vector3(0, 0, 11),
-              ]),
-              new LineBasicMaterial({ color: 0x0000ff })
-            )
-          }
-        />
-        <Billboard position={[0, 0, 12]}>
-          <Text color="white" fontSize={0.5} anchorX="center" anchorY="middle">
-            +Y
-          </Text>
-        </Billboard>
-        <Billboard position={[0, 0, -12]}>
-          <Text color="white" fontSize={0.5} anchorX="center" anchorY="middle">
-            -Y
-          </Text>
-        </Billboard>
-
-        {/* <Parabola2D /> */}
-
-        {assets.map(
-          (asset, index) => (
-            asset.data.type === "Vector" && (
-              <React.Fragment key={index}>
-                <primitive
-                  object={
-                    new Line(
-                      new BufferGeometry().setFromPoints([
-                        new Vector3(0, 0, 0),
-                        new Vector3(
-                          asset.data.vector.x,
-
-                          asset.data.vector.z,
-                          asset.data.vector.y
-                        ),
-                      ]),
-                      new LineBasicMaterial({ color: 0xffff00 })
-                    )
-                  }
-                />
-                <mesh
-                  position={[
-                    asset.data.vector.x,
-                    asset.data.vector.z,
-                    asset.data.vector.y,
-                  ]}
-                >
-                  <sphereGeometry args={[0.1, 32, 32]} />
-                  <meshBasicMaterial color={0xffff00} />
-                </mesh>
-                <Billboard
-                  position={[
-                    asset.data.vector.x + 0.25,
-                    asset.data.vector.z + 0.25,
-                    asset.data.vector.y + 0.25,
-                  ]}
-                >
-                  <Text
-                    color="white"
-                    fontSize={0.3}
-                    anchorX="center"
-                    anchorY="middle"
-                  >
-                    ({asset.data.vector.x.toFixed(1)},{" "}
-                    {asset.data.vector.y.toFixed(1)},{" "}
-                    {asset.data.vector.z.toFixed(1)})
-                  </Text>
-                </Billboard>
-              </React.Fragment>
-            ),
-            asset.data.type === "General" && (
-              <GeneralEquation3D key={index} equation={asset.data} />
-            )
-          )
-        )}
+        })}
       </Canvas>
     </div>
   );

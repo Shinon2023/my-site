@@ -1,12 +1,23 @@
 import { Line, BufferGeometry, LineBasicMaterial, Vector3 } from "three";
 import { GeneralEquation } from "@/utils/types/project";
+import { useThree } from "@react-three/fiber";
+import * as THREE from "three";
 
 export function GeneralEquation3D({ equation }: { equation: GeneralEquation }) {
   if (equation.type !== "General") return null;
-
+  const { gl } = useThree();
+  gl.localClippingEnabled = true;
+  const clipPlanes = [
+    new THREE.Plane(new THREE.Vector3(1, 0, 0), 10),
+    new THREE.Plane(new THREE.Vector3(-1, 0, 0), 10),
+    new THREE.Plane(new THREE.Vector3(0, 1, 0), 10),
+    new THREE.Plane(new THREE.Vector3(0, -1, 0), 10),
+    new THREE.Plane(new THREE.Vector3(0, 0, 1), 10),
+    new THREE.Plane(new THREE.Vector3(0, 0, -1), 10),
+  ];
   const vertices = [] as number[];
-  const width = 30;
-  const step = 0.02;
+  const step = 0.075;
+  const width = 377.5 * step;
 
   const gridSize = Math.round(width / step);
 
@@ -27,9 +38,7 @@ export function GeneralEquation3D({ equation }: { equation: GeneralEquation }) {
         z += termValue;
       }
 
-      if (Math.abs(x) <= 10 && Math.abs(y) <= 10 && Math.abs(z) <= 10) {
-        vertices.push(x, z, y);
-      }
+      vertices.push(x, z, y);
     }
   }
 
@@ -74,15 +83,36 @@ export function GeneralEquation3D({ equation }: { equation: GeneralEquation }) {
           count={indices.length}
         />
       </bufferGeometry>
-      <meshStandardMaterial color="blue" flatShading />
+      <meshStandardMaterial
+        color="green"
+        flatShading
+        clippingPlanes={clipPlanes}
+        clipShadows
+        // wireframe
+        side={THREE.DoubleSide}
+      />
     </mesh>
   );
 }
 
-export function Parabola2D() {
+export function GeneralEquation2D({ equation }: { equation: GeneralEquation }) {
   const points = [];
+  const calculateY = (x: number): number => {
+    let y = 0;
+    for (const term of equation.terms) {
+      let termValue = term.coefficient;
+      for (const variable of term.variables) {
+        if (variable.name === "x") {
+          termValue *= Math.pow(x, variable.exponent);
+        }
+      }
+      y += termValue;
+    }
+    return y;
+  };
+
   for (let x = -10; x <= 10; x += 0.2) {
-    const y = x * x + 5 * x;
+    const y = calculateY(x);
     points.push(new Vector3(x, 0, y));
   }
 
